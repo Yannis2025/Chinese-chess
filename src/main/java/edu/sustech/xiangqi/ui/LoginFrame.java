@@ -6,6 +6,8 @@ package edu.sustech.xiangqi.ui;
 
 import java.awt.*;
 import javax.swing.*;
+
+import edu.sustech.xiangqi.register.RegisterFrame;
 import edu.sustech.xiangqi.validator.validator;
 import edu.sustech.xiangqi.model.ChessBoardModel;
 import edu.sustech.xiangqi.ui.ChessBoardPanel;
@@ -39,6 +41,14 @@ public class LoginFrame  {
         });
 
     }
+    private void openRegisterFrame(){
+        loginFrame.dispose();
+        SwingUtilities.invokeLater(()->{
+            RegisterFrame registerFrame=new RegisterFrame();
+            registerFrame.setVisible(true);
+            registerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        });
+    }
     private void clickButton(){
         LoginButton.addActionListener(e -> {
             String username=UsernameField.getText();
@@ -51,7 +61,9 @@ public class LoginFrame  {
                 //this指窗体本身
             }
         });
-
+        RegisterButton.addActionListener(e -> {
+            openRegisterFrame();
+        });
     }
     /*private void testClickButton(){
         LoginButton.addActionListener(e -> {
@@ -85,13 +97,15 @@ public class LoginFrame  {
 
             //---- UsernameLabel ----
             UsernameLabel.setText("Username:");
+            UsernameLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
             loginFrameContentPane.add(UsernameLabel);
-            UsernameLabel.setBounds(105, 90, UsernameLabel.getPreferredSize().width, 22);
+            UsernameLabel.setBounds(95, 90, UsernameLabel.getPreferredSize().width, 22);
 
             //---- PasswordLabel ----
             PasswordLabel.setText("Password:");
+            PasswordLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
             loginFrameContentPane.add(PasswordLabel);
-            PasswordLabel.setBounds(new Rectangle(new Point(105, 140), PasswordLabel.getPreferredSize()));
+            PasswordLabel.setBounds(new Rectangle(new Point(100, 135), PasswordLabel.getPreferredSize()));
 
             //---- TitleLabel ----
             TitleLabel.setText("The Chinese Chess Login System");
@@ -109,9 +123,9 @@ public class LoginFrame  {
             loginFrameContentPane.add(LoginButton);
             LoginButton.setBounds(new Rectangle(new Point(260, 185), LoginButton.getPreferredSize()));
             loginFrameContentPane.add(PasswordField);
-            PasswordField.setBounds(170, 130, 175, PasswordField.getPreferredSize().height);
+            PasswordField.setBounds(190, 140, 175, PasswordField.getPreferredSize().height);
             loginFrameContentPane.add(UsernameField);
-            UsernameField.setBounds(170, 85, 175, UsernameField.getPreferredSize().height);
+            UsernameField.setBounds(190, 95, 175, UsernameField.getPreferredSize().height);
 
             loginFrameContentPane.setPreferredSize(new Dimension(475, 275));
             loginFrame.pack();
