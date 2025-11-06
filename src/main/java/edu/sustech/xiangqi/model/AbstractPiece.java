@@ -5,7 +5,7 @@ public abstract class AbstractPiece {
     private final boolean isRed;
     private int row;
     private int col;
-
+    //为所有棋子提供共同的初始化
     public AbstractPiece(String name, int row, int col, boolean isRed) {
         this.name = name;
         this.row = row;
@@ -36,7 +36,7 @@ public abstract class AbstractPiece {
     public boolean isRed() {
         return isRed;
     }
-
+    //为移动后的棋子赋予当前坐标
     public void moveTo(int newRow, int newCol) {
         this.row = newRow;
         this.col = newCol;
@@ -46,5 +46,6 @@ public abstract class AbstractPiece {
      * 判断棋子是否可以移动到目标位置
      * @return 是否可以移动
      */
+    //待实现:
     public abstract boolean canMoveTo(int targetRow, int targetCol, ChessBoardModel model);
 }
