@@ -131,9 +131,45 @@ public class ChessFrame extends JFrame {
         repaint();
     }
     //测试
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         ChessFrame chessFrame=new ChessFrame();
         chessFrame.setVisible(true);
-    }
+    }*/
+    /**
+     * 绘制选中棋子时的蓝色外边框效果
+     */
+    /*private void drawCornerBorders(Graphics2D g, int centerX, int centerY) {
+        g.setColor(new Color(0, 100, 255));
+        g.setStroke(new BasicStroke(3));
+
+        int cornerSize = 32;
+        int lineLength = 12;
+
+        // 选中效果的边框实际上是8条line，每两个line组成一个角落的边框
+
+        // 左上角的边框
+        g.drawLine(centerX - cornerSize, centerY - cornerSize,
+                centerX - cornerSize + lineLength, centerY - cornerSize);
+        g.drawLine(centerX - cornerSize, centerY - cornerSize,
+                centerX - cornerSize, centerY - cornerSize + lineLength);
+
+        // 右上角的边框
+        g.drawLine(centerX + cornerSize, centerY - cornerSize,
+                centerX + cornerSize - lineLength, centerY - cornerSize);
+        g.drawLine(centerX + cornerSize, centerY - cornerSize,
+                centerX + cornerSize, centerY - cornerSize + lineLength);
+
+        // 左下角的边框
+        g.drawLine(centerX - cornerSize, centerY + cornerSize,
+                centerX - cornerSize + lineLength, centerY + cornerSize);
+        g.drawLine(centerX - cornerSize, centerY + cornerSize,
+                centerX - cornerSize, centerY + cornerSize - lineLength);
+
+        // 右下角的边框
+        g.drawLine(centerX + cornerSize, centerY + cornerSize,
+                centerX + cornerSize - lineLength, centerY + cornerSize);
+        g.drawLine(centerX + cornerSize, centerY + cornerSize,
+                centerX + cornerSize, centerY + cornerSize - lineLength);
+    }*/
 }
 

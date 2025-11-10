@@ -74,7 +74,7 @@ public class ChessBoardPanel extends JPanel {
         // Demo的GUI都是由Swing中基本的组件组成的，比如背景的格子是用许多个line组合起来实现的，棋子是先绘制一个circle再在上面绘制一个text实现的
         // 因此绘制GUI的过程中需要自己手动计算每个组件的位置（坐标）
         drawBoard(g2d);
-        drawPieces(g2d);
+        //drawPieces(g2d);
     }
 
     /**
@@ -122,7 +122,7 @@ public class ChessBoardPanel extends JPanel {
     /**
      * 绘制棋子
      */
-    private void drawPieces(Graphics2D g) {
+    /*private void drawPieces(Graphics2D g) {
         // 遍历棋盘上的每一个棋子，每次循环绘制该棋子
         for (AbstractPiece piece : model.getPieces()) {
             // 计算每一个棋子的坐标
@@ -160,7 +160,7 @@ public class ChessBoardPanel extends JPanel {
     /**
      * 绘制选中棋子时的蓝色外边框效果
      */
-    private void drawCornerBorders(Graphics2D g, int centerX, int centerY) {
+    /*private void drawCornerBorders(Graphics2D g, int centerX, int centerY) {
         g.setColor(new Color(0, 100, 255));
         g.setStroke(new BasicStroke(3));
 
@@ -192,5 +192,5 @@ public class ChessBoardPanel extends JPanel {
                 centerX + cornerSize - lineLength, centerY + cornerSize);
         g.drawLine(centerX + cornerSize, centerY + cornerSize,
                 centerX + cornerSize, centerY + cornerSize - lineLength);
-    }
+    }*/
 }
