@@ -1,8 +1,10 @@
 package edu.sustech.xiangqi.model;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ChessFrame extends JFrame {
+
     //用于放棋盘图的JLabel
     private JLabel chessboard;
     //用于放ControlPanel的JLabel
@@ -14,7 +16,36 @@ public class ChessFrame extends JFrame {
     //棋子图标数组
     private JLabel[][] chessPiece=new JLabel[10][9];
 
-    //初始化棋盘
+    //棋盘边界与窗口边界的差距
+    private static final int MARGIN = 51;
+    //格子大小
+    private static final int CELL_SIZE = 58;
+    //棋子半径
+    private static final int PIECE_RADIUS = 27;
+    private AbstractPiece selectedPiece = null;
+
+    //处理鼠标点击
+    private void handleMouseClick(int x, int y) {
+        int col = Math.round((float)(x - MARGIN) / CELL_SIZE);
+        int row = Math.round((float)(y - MARGIN) / CELL_SIZE);
+
+        /*if (!model.isValidPosition(row, col)) {
+            return;
+        }
+
+        if (selectedPiece == null) {
+            selectedPiece = model.getPieceAt(row, col);
+        } else {
+            model.movePiece(selectedPiece, row, col);
+            selectedPiece = null;
+        }*/
+
+        // 处理完点击事件后，需要重新绘制ui界面才能让界面上的棋子“移动”起来
+        // Swing 会将多个请求合并后再重新绘制，因此调用 repaint 后gui不会立刻变更
+        // repaint 中会调用 paintComponent，从而重新绘制gui上棋子的位置等
+        repaint();
+    }
+    //设置ChessFrame中的图标
     public ChessFrame(){
         //设置窗口大小
         setBounds(600,75,700,650);
@@ -60,7 +91,6 @@ public class ChessFrame extends JFrame {
 
 
     }
-
     //初始化棋子位置
     private void initializeChess(){
         //用变量储存参数减少改参数的麻烦
@@ -116,7 +146,6 @@ public class ChessFrame extends JFrame {
         //设置棋子在最上层显示
         //setComponentZOrder(chess,0);
     }
-
     //newGame重置棋子
     public void setNewGame(){
         for (int i = 0; i < 10; i++) {
@@ -131,14 +160,18 @@ public class ChessFrame extends JFrame {
         repaint();
     }
     //测试
-    /*public static void main(String[] args) {
-        ChessFrame chessFrame=new ChessFrame();
-        chessFrame.setVisible(true);
-    }*/
+//  public static void main(String[] args) {
+//        ChessFrame chessFrame=new ChessFrame();
+//        chessFrame.setVisible(true);
+//    }
+    //位置是否合法
+    public boolean isValidPosition(int row, int col) {
+        return row >= 0 && row < 10 && col >= 0 && col < 9;
+    }
     /**
      * 绘制选中棋子时的蓝色外边框效果
      */
-    /*private void drawCornerBorders(Graphics2D g, int centerX, int centerY) {
+    private void drawCornerBorders(Graphics2D g, int centerX, int centerY) {
         g.setColor(new Color(0, 100, 255));
         g.setStroke(new BasicStroke(3));
 
@@ -170,6 +203,6 @@ public class ChessFrame extends JFrame {
                 centerX + cornerSize - lineLength, centerY + cornerSize);
         g.drawLine(centerX + cornerSize, centerY + cornerSize,
                 centerX + cornerSize, centerY + cornerSize - lineLength);
-    }*/
+    }
 }
 

@@ -7,6 +7,7 @@ package edu.sustech.xiangqi.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import edu.sustech.xiangqi.model.ChessFrame;
 import edu.sustech.xiangqi.register.RegisterFrame;
 import edu.sustech.xiangqi.validator.validator;
 import edu.sustech.xiangqi.model.ChessBoardModel;
@@ -15,32 +16,37 @@ import edu.sustech.xiangqi.ui.ChessBoardPanel;
  * @author yanni
  */
 public class LoginFrame  {
+    //主方法,放置组件+按钮响应
     public LoginFrame() {
         initComponents();
         clickButton();
         //testClickButton();
     }
+    //显示可见+exitOnClose
     public void show(){
         loginFrame.setVisible(true);
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    //打开象棋界面
     private void openChessBoard(){
         loginFrame.dispose();//关闭当前登录界面
         SwingUtilities.invokeLater(() -> {
-            // 创建象棋界面
-            JFrame chessFrame = new JFrame("中国象棋");
-            chessFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            //这些是老师给出的实例代码部分,需要改成我的
+//            JFrame chessFrame = new JFrame("中国象棋");
+//            chessFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            ChessBoardModel model = new ChessBoardModel();
-            ChessBoardPanel boardPanel = new ChessBoardPanel(model);
-
-            chessFrame.add(boardPanel);
-            chessFrame.pack();
-            chessFrame.setLocationRelativeTo(null);
+//            ChessBoardModel model = new ChessBoardModel();
+//            ChessBoardPanel boardPanel = new ChessBoardPanel(model);
+//            chessFrame.add(boardPanel);
+//            chessFrame.pack();//窗口大小自动适应内容
+//            chessFrame.setLocationRelativeTo(null);
+//            chessFrame.setVisible(true);
+            ChessFrame chessFrame=new ChessFrame();
             chessFrame.setVisible(true);
         });
 
     }
+    //打开注册界面
     private void openRegisterFrame(){
         loginFrame.dispose();
         SwingUtilities.invokeLater(()->{
@@ -49,6 +55,7 @@ public class LoginFrame  {
             registerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         });
     }
+    //注册与登录两个按钮功能
     private void clickButton(){
         LoginButton.addActionListener(e -> {
             String username=UsernameField.getText();
@@ -78,6 +85,7 @@ public class LoginFrame  {
             }
         });
     }*/
+    //JFormDesigner自带的,写入组件
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - 苏云翼
