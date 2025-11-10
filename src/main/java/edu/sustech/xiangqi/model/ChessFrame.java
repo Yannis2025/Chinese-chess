@@ -161,12 +161,12 @@ public class ChessFrame extends JFrame {
 //        ChessFrame chessFrame=new ChessFrame();
 //        chessFrame.setVisible(true);
 //    }
-    //位置是否合法
+    //位置是否合法(未接入)
     public boolean isValidPosition(int row, int col) {
         return row >= 0 && row < 10 && col >= 0 && col < 9;
     }
     /**
-     * 绘制选中棋子时的蓝色外边框效果
+     * 绘制选中棋子时的蓝色外边框效果(未接入)
      */
     private void drawCornerBorders(Graphics2D g, int centerX, int centerY) {
         g.setColor(new Color(0, 100, 255));
