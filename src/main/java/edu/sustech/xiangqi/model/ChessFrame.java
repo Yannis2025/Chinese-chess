@@ -4,17 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ChessFrame extends JFrame {
-
-    //用于放棋盘图的JLabel
-    private JLabel chessboard;
-    //用于放ControlPanel的JLabel
-    private JLabel controlPanel;
+    private JLabel chessboard;//用于放棋盘图的JLabel
+    private JLabel controlPanel;//用于放ControlPanel的JLabel
     private JLabel back;//悔棋图标
     private JLabel musicTurnon;
     private JLabel musicTurnoff;
     private JLabel newGame;
-    //棋子图标数组
-    private JLabel[][] chessPiece=new JLabel[10][9];
+    private JLabel[][] chessPiece=new JLabel[10][9]; //棋子图标数组
 
     //棋盘边界与窗口边界的差距
     private static final int MARGIN = 51;
@@ -22,9 +18,10 @@ public class ChessFrame extends JFrame {
     private static final int CELL_SIZE = 58;
     //棋子半径
     private static final int PIECE_RADIUS = 27;
+    //是否选中(位于抽象棋子类/棋子共同属性类中,还未接入)
     private AbstractPiece selectedPiece = null;
 
-    //处理鼠标点击
+    //处理鼠标点击(未接入)
     private void handleMouseClick(int x, int y) {
         int col = Math.round((float)(x - MARGIN) / CELL_SIZE);
         int row = Math.round((float)(y - MARGIN) / CELL_SIZE);
@@ -146,7 +143,7 @@ public class ChessFrame extends JFrame {
         //设置棋子在最上层显示
         //setComponentZOrder(chess,0);
     }
-    //newGame重置棋子
+    //newGame重置棋子(差一点完成)
     public void setNewGame(){
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 9; j++) {
