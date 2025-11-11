@@ -1,10 +1,13 @@
 package edu.sustech.xiangqi.model;
 
+import javax.swing.*;
+
 public abstract class AbstractPiece {
     private final String name;
     private final boolean isRed;
     private int row;
     private int col;
+    private JLabel lblchess;
     //为所有棋子提供共同的初始化
     public AbstractPiece(String name, int row, int col, boolean isRed) {
         this.name = name;

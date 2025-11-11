@@ -2,8 +2,11 @@ package edu.sustech.xiangqi.model;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class ChessFrame extends JFrame {
+public class ChessFrame extends JFrame implements MouseListener {
+
     private JLabel chessboard;//用于放棋盘图的JLabel
     private JLabel controlPanel;//用于放ControlPanel的JLabel
     private JLabel back;//悔棋图标
@@ -11,7 +14,18 @@ public class ChessFrame extends JFrame {
     private JLabel musicTurnoff;
     private JLabel newGame;
     private JLabel[][] chessPiece=new JLabel[10][9]; //棋子图标数组
-
+    private String chessUI[][]={
+            {"黑车","黑马","黑象","黑士","黑帅","黑士","黑象","黑马","黑车"},
+            {"","","","","","","","",""},
+            {"","黑炮","","","","","","黑炮",""},
+            {"黑卒","","黑卒","","黑卒","","黑卒","","黑卒"},
+            {"","","","","","","","",""},
+            {"","","","","","","","",""},
+            {"红卒","","红卒","","红卒","","红卒","","红卒"},
+            {"","红炮","","","","","","红炮",""},
+            {"","","","","","","","",""},
+            {"红车","红马","红象","红士","红帅","红士","红象","红马","红车"}
+    };
     //棋盘边界与窗口边界的差距
     private static final int MARGIN = 51;
     //格子大小
@@ -20,6 +34,8 @@ public class ChessFrame extends JFrame {
     private static final int PIECE_RADIUS = 27;
     //是否选中(位于抽象棋子类/棋子共同属性类中,还未接入)
     private AbstractPiece selectedPiece = null;
+    //棋子坐标
+    private Location[][] location = new Location[10][9];
 
     //处理鼠标点击(未接入)
     private void handleMouseClick(int x, int y) {
@@ -42,6 +58,7 @@ public class ChessFrame extends JFrame {
         // repaint 中会调用 paintComponent，从而重新绘制gui上棋子的位置等
         repaint();
     }
+
     //设置ChessFrame中的图标
     public ChessFrame(){
         //设置窗口大小
@@ -88,6 +105,7 @@ public class ChessFrame extends JFrame {
 
 
     }
+
     //初始化棋子位置
     private void initializeChess(){
         //用变量储存参数减少改参数的麻烦
@@ -96,53 +114,58 @@ public class ChessFrame extends JFrame {
         int gridSize=58;//网格尺寸(宽高相同)
         int chessSize=55;
 
-        placeChess(0,0,"黑车.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(0,8,"黑车.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(0,1,"黑马.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(0,7,"黑马.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(0,2,"黑象.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(0,6,"黑象.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(0,3,"黑士.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(0,5,"黑士.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(0,4,"黑将.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(2,1,"黑炮.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(2,7,"黑炮.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(3,0,"黑卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(3,2,"黑卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(3,4,"黑卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(3,6,"黑卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(3,8,"黑卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,0,"红车.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,8,"红车.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,1,"红马.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,7,"红马.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,2,"红象.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,6,"红象.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,3,"红士.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,5,"红士.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(9,4,"红将.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(7,1,"红炮.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(7,7,"红炮.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(6,0,"红卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(6,2,"红卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(6,4,"红卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(6,6,"红卒.gif",initialX,initialY,gridSize,chessSize);
-        placeChess(6,8,"红卒.gif",initialX,initialY,gridSize,chessSize);
+        placeChess(0,0,"黑车.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(0,8,"黑车.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(0,1,"黑马.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(0,7,"黑马.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(0,2,"黑象.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(0,6,"黑象.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(0,3,"黑士.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(0,5,"黑士.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(0,4,"黑将.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(2,1,"黑炮.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(2,7,"黑炮.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(3,0,"黑卒.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(3,2,"黑卒.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(3,4,"黑卒.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(3,6,"黑卒.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(3,8,"黑卒.gif",initialX,initialY,gridSize,chessSize,false);
+        placeChess(9,0,"红车.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(9,8,"红车.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(9,1,"红马.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(9,7,"红马.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(9,2,"红象.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(9,6,"红象.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(9,3,"红士.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(9,5,"红士.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(9,4,"红将.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(7,1,"红炮.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(7,7,"红炮.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(6,0,"红卒.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(6,2,"红卒.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(6,4,"红卒.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(6,6,"红卒.gif",initialX,initialY,gridSize,chessSize,true);
+        placeChess(6,8,"红卒.gif",initialX,initialY,gridSize,chessSize,true);
 
     }
+
     //放置棋子
-    private void placeChess(int row,int col,String image,int initialX,int initialY,int gridSize,int chessSize){
+    private void placeChess(int row,int col,String image,int initialX,int initialY,int gridSize,int chessSize,boolean isRed){
         //得计算棋子在棋盘上的位置,否则无法setBounds
         int x=initialX+col*gridSize+(gridSize-chessSize)/2;
         //得到第col列格子的左侧X坐标+格子左侧与棋子左侧相隔的距离=棋子左侧的坐标
         int y=initialY+row*gridSize+(gridSize-chessSize)/2;
+
         JLabel chess=new JLabel(new ImageIcon("image/"+image));
         chess.setBounds(x,y,chessSize,chessSize);
         chessPiece[row][col]=chess;
-        getContentPane().add(chess);
-        //设置棋子在最上层显示
-        //setComponentZOrder(chess,0);
+        chess.addMouseListener(this);//this指当前操作的ChessFrame类的实例
+        add(chess);//JFrame里默认委托给content pane,所以直接add
+
+        //备份棋子属性
+        location[row][col]=new Location(row,col,chessUI[row][col],chess);
     }
+
     //newGame重置棋子(差一点完成)
     public void setNewGame(){
         for (int i = 0; i < 10; i++) {
@@ -156,6 +179,7 @@ public class ChessFrame extends JFrame {
         initializeChess();
         repaint();
     }
+
     //测试
 //  public static void main(String[] args) {
 //        ChessFrame chessFrame=new ChessFrame();
@@ -165,6 +189,7 @@ public class ChessFrame extends JFrame {
     public boolean isValidPosition(int row, int col) {
         return row >= 0 && row < 10 && col >= 0 && col < 9;
     }
+
     /**
      * 绘制选中棋子时的蓝色外边框效果(未接入)
      */
@@ -200,6 +225,48 @@ public class ChessFrame extends JFrame {
                 centerX + cornerSize - lineLength, centerY + cornerSize);
         g.drawLine(centerX + cornerSize, centerY + cornerSize,
                 centerX + cornerSize, centerY + cornerSize - lineLength);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        JLabel lblSource = (JLabel) e.getSource();
+        //(JLabel):将原组件强制转换成JLabel类型(不然用不了)
+        //这里是获取触发鼠标点击事件的源组件
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 9; j++) {
+                //跳过空位置
+                if (location[i][j]==null){
+                    continue;
+                }
+                if (lblSource==location[i][j].getLblChess()){
+                    System.out.println(location[i][j].getChessName());
+                    System.out.println("X:"+location[i][j].getX());
+                    System.out.println("Y:"+location[i][j].getY());
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
 
