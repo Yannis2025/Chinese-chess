@@ -10,8 +10,7 @@ import javax.swing.*;
 import edu.sustech.xiangqi.model.ChessFrame;
 import edu.sustech.xiangqi.register.RegisterFrame;
 import edu.sustech.xiangqi.validator.validator;
-import edu.sustech.xiangqi.model.ChessBoardModel;
-import edu.sustech.xiangqi.ui.ChessBoardPanel;
+
 /**
  * @author yanni
  */
@@ -31,16 +30,6 @@ public class LoginFrame  {
     private void openChessBoard(){
         loginFrame.dispose();//关闭当前登录界面
         SwingUtilities.invokeLater(() -> {
-            //这些是老师给出的实例代码部分,需要改成我的
-//            JFrame chessFrame = new JFrame("中国象棋");
-//            chessFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-//            ChessBoardModel model = new ChessBoardModel();
-//            ChessBoardPanel boardPanel = new ChessBoardPanel(model);
-//            chessFrame.add(boardPanel);
-//            chessFrame.pack();//窗口大小自动适应内容
-//            chessFrame.setLocationRelativeTo(null);
-//            chessFrame.setVisible(true);
             ChessFrame chessFrame=new ChessFrame();
             chessFrame.setVisible(true);
         });

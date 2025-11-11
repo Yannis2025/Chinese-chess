@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 
 public class ChessFrame extends JFrame implements MouseListener {
 
+    private Location selectedPiece = null;
     private JLabel chessboard;//用于放棋盘图的JLabel
     private JLabel controlPanel;//用于放ControlPanel的JLabel
     private JLabel back;//悔棋图标
@@ -32,32 +33,12 @@ public class ChessFrame extends JFrame implements MouseListener {
     private static final int CELL_SIZE = 58;
     //棋子半径
     private static final int PIECE_RADIUS = 27;
-    //是否选中(位于抽象棋子类/棋子共同属性类中,还未接入)
-    private AbstractPiece selectedPiece = null;
-    //棋子坐标
+    //棋子坐标:可通过locatoin找到被点击棋子的位置和名称并储存棋子的完整信息
     private Location[][] location = new Location[10][9];
-
-    //处理鼠标点击(未接入)
-    private void handleMouseClick(int x, int y) {
-        int col = Math.round((float)(x - MARGIN) / CELL_SIZE);
-        int row = Math.round((float)(y - MARGIN) / CELL_SIZE);
-
-        /*if (!model.isValidPosition(row, col)) {
-            return;
-        }
-
-        if (selectedPiece == null) {
-            selectedPiece = model.getPieceAt(row, col);
-        } else {
-            model.movePiece(selectedPiece, row, col);
-            selectedPiece = null;
-        }*/
-
-        // 处理完点击事件后，需要重新绘制ui界面才能让界面上的棋子“移动”起来
-        // Swing 会将多个请求合并后再重新绘制，因此调用 repaint 后gui不会立刻变更
-        // repaint 中会调用 paintComponent，从而重新绘制gui上棋子的位置等
-        repaint();
-    }
+    //决定红黑
+    private int count = 0;
+    //显示框框
+    private JLabel selectedChess;
 
     //设置ChessFrame中的图标
     public ChessFrame(){
@@ -70,13 +51,19 @@ public class ChessFrame extends JFrame implements MouseListener {
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
         initializeChess();
         //棋盘背景图
         chessboard =new JLabel(new ImageIcon("image/Chessboard.gif"));
         chessboard.setBounds(0,0,558,620);
+        chessboard.addMouseListener(this);
         getContentPane().add(chessboard);//获取内容面板,获取其中的组件JLabel
 
-
+        //初始化选中框
+        selectedChess=new JLabel(new ImageIcon("image/redhint.png"));
+        selectedChess.setBounds(0,0,51,47);
+        selectedChess.setVisible(false);
+        chessboard.add(selectedChess);
 
         //悔棋图标
         back=new JLabel(new ImageIcon("image/back.jpg"));
@@ -181,72 +168,102 @@ public class ChessFrame extends JFrame implements MouseListener {
     }
 
     //测试
-//  public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        ChessFrame chessFrame=new ChessFrame();
 //        chessFrame.setVisible(true);
 //    }
-    //位置是否合法(未接入)
-    public boolean isValidPosition(int row, int col) {
-        return row >= 0 && row < 10 && col >= 0 && col < 9;
-    }
 
-    /**
-     * 绘制选中棋子时的蓝色外边框效果(未接入)
-     */
-    private void drawCornerBorders(Graphics2D g, int centerX, int centerY) {
-        g.setColor(new Color(0, 100, 255));
-        g.setStroke(new BasicStroke(3));
+    //移动棋子
+    public void movePiece(Location formerLocation, int toRow, int toCol){
+        int formerRow=formerLocation.getX();
+        int formerCol=formerLocation.getY();
 
-        int cornerSize = 32;
-        int lineLength = 12;
+        if (chessPiece[toRow][toCol]!=null){
+            //使用JLabel的移除方法
+            remove(chessPiece[toRow][toCol]);
+            chessPiece[toRow][toCol]=null;
+        }
+        JLabel selectedPiece = chessPiece[formerRow][formerCol];
+        if (selectedPiece == null) {
+            return;
+        }
+        //计算新位置坐标并更新位置
+        int initialX = 20;
+        int initialY = 20;
+        int gridSize = 58;
+        int chessSize = 55;
+        int newX = initialX + toCol * gridSize + (gridSize - chessSize) / 2;
+        int newY = initialY + toRow * gridSize + (gridSize - chessSize) / 2;
+        selectedPiece.setBounds(newX,newY,chessSize,chessSize);
 
-        // 选中效果的边框实际上是8条line，每两个line组成一个角落的边框
+        //更新数组数据
+        chessPiece[toRow][toCol]=selectedPiece;
+        chessPiece[formerRow][formerCol]=null;
+        location[toRow][toCol]=new Location(toRow,toCol,formerLocation.getChessName(),selectedPiece);
+        location[formerRow][formerCol]=new Location(formerRow,formerCol,"",null);
 
-        // 左上角的边框
-        g.drawLine(centerX - cornerSize, centerY - cornerSize,
-                centerX - cornerSize + lineLength, centerY - cornerSize);
-        g.drawLine(centerX - cornerSize, centerY - cornerSize,
-                centerX - cornerSize, centerY - cornerSize + lineLength);
-
-        // 右上角的边框
-        g.drawLine(centerX + cornerSize, centerY - cornerSize,
-                centerX + cornerSize - lineLength, centerY - cornerSize);
-        g.drawLine(centerX + cornerSize, centerY - cornerSize,
-                centerX + cornerSize, centerY - cornerSize + lineLength);
-
-        // 左下角的边框
-        g.drawLine(centerX - cornerSize, centerY + cornerSize,
-                centerX - cornerSize + lineLength, centerY + cornerSize);
-        g.drawLine(centerX - cornerSize, centerY + cornerSize,
-                centerX - cornerSize, centerY + cornerSize - lineLength);
-
-        // 右下角的边框
-        g.drawLine(centerX + cornerSize, centerY + cornerSize,
-                centerX + cornerSize - lineLength, centerY + cornerSize);
-        g.drawLine(centerX + cornerSize, centerY + cornerSize,
-                centerX + cornerSize, centerY + cornerSize - lineLength);
+        repaint();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         JLabel lblSource = (JLabel) e.getSource();
-        //(JLabel):将原组件强制转换成JLabel类型(不然用不了)
-        //这里是获取触发鼠标点击事件的源组件
-
+        //情况1:点击棋子
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 9; j++) {
-                //跳过空位置
-                if (location[i][j]==null){
-                    continue;
-                }
-                if (lblSource==location[i][j].getLblChess()){
-                    System.out.println(location[i][j].getChessName());
-                    System.out.println("X:"+location[i][j].getX());
-                    System.out.println("Y:"+location[i][j].getY());
+                if (location[i][j] != null && lblSource == location[i][j].getLblChess()) {//防止在null的地方调用getLblChess会报错
+                    // 情况1A：已经选中了棋子
+                    if (selectedPiece != null) {
+                        boolean isSelectedRed = selectedPiece.getChessName().contains("红");
+                        boolean isTargetRed = location[i][j].getChessName().contains("红");
+                        if (isSelectedRed!=isTargetRed) {
+                            // 颜色不同就吃子
+                            movePiece(selectedPiece, i, j);
+                            selectedPiece = null;
+                            selectedChess.setVisible(false);
+                            count++;
+                        } else {
+                            // 颜色相同就切换选中
+                            if ((count % 2 == 0 && location[i][j].getChessName().contains("红")) || (count % 2 == 1 && location[i][j].getChessName().contains("黑"))) {
+                                selectedChess.setBounds(lblSource.getX(), lblSource.getY() + 2, 51, 47);
+                                selectedChess.setVisible(true);
+                                selectedPiece = location[i][j];
+                            }
+                        }
+                    }
+                    // 情况1B：没有选中的棋子
+                    else {
+                        if ((count % 2 == 0 && location[i][j].getChessName().contains("红"))||(count % 2 == 1 && location[i][j].getChessName().contains("黑"))) {
+                            selectedChess.setBounds(lblSource.getX(), lblSource.getY() + 2, 51, 47);
+                            selectedChess.setVisible(true);
+                            selectedPiece = location[i][j];
+                        }
+                    }
                     return;
                 }
             }
         }
+        //情况2:点击到chessboard
+        if (selectedPiece!=null&&lblSource==chessboard){
+            //计算点击的棋盘坐标
+            Point clickPoint = e.getPoint();//获取点击处的坐标
+            int col = Math.round((float)(clickPoint.x - MARGIN) / CELL_SIZE);
+            int row = Math.round((float)(clickPoint.y - MARGIN) / CELL_SIZE);
+            //这个公式的意义:(clickPoint.x - MARGIN) :减去棋盘左边距,得到相对于棋盘网格左上角的X坐标
+            //(float):除以格子宽度后得到小数形式的列数(e.g.99/58~1.706)
+            //round:四舍五入到最接近的整数(1.706~2),不用round将会等于1,显然不能实现四舍五入
+
+            if (row>=0&&row<10&&col>=0&&col<9){
+                movePiece(selectedPiece,row,col);
+                selectedPiece = null;
+                selectedChess.setVisible(false);
+                count++;
+            }
+            return;
+        }
+        // 点击空白处取消选中
+        selectedPiece=null;
+        selectedChess.setVisible(false);
     }
 
     @Override
